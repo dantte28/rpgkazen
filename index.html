@@ -874,11 +874,20 @@ function getImg(k){
 
 let curPage='home',sessions=[],curSessId=null,loading=false;
 
-window.addEventListener('load',()=>{
-  setTimeout(()=>document.getElementById('loader').classList.add('out'),1800);
+// Garantir que loader some sempre — fallback para Vercel/CDN
+function initApp(){
   buildChars();buildElems();buildEntities();loadSessions();
   window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>20));
-});
+  setTimeout(()=>document.getElementById('loader').classList.add('out'),1800);
+}
+
+if(document.readyState==='complete'||document.readyState==='interactive'){
+  setTimeout(initApp,100);
+} else {
+  window.addEventListener('DOMContentLoaded', initApp);
+}
+// Fallback absoluto — se depois de 4s ainda estiver carregando, força
+setTimeout(()=>document.getElementById('loader').classList.add('out'),4000);
 
 function go(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
